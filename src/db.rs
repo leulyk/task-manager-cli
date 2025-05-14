@@ -2,6 +2,44 @@ use crate::models::{DBState, Epic, Status, Story};
 use anyhow::Result;
 use std::fs;
 
+pub struct JiraDatabase {
+    database: Box<dyn Database>,
+}
+
+impl JiraDatabase {
+    pub fn new(file_path: String) -> Self {
+        todo!()
+    }
+
+    pub fn read_db(&self) -> Result<DBState> {
+        todo!()
+    }
+
+    pub fn create_epic(&self, epic: Epic) -> Result<u32> {
+        todo!()
+    }
+
+    pub fn create_story(&self, story: Story, epic_id: u32) -> Result<u32> {
+        todo!()
+    }
+
+    pub fn delete_epic(&self, epic_id: u32) -> Result<()> {
+        todo!()
+    }
+
+    pub fn delete_story(&self, epic_id: u32, story_id: u32) -> Result<()> {
+        todo!()
+    }
+
+    pub fn update_epic_status(&self, epic_id: u32, status: Status) -> Result<()> {
+        todo!()
+    }
+
+    pub fn update_story_status(&self, story_id: u32, status: Status) -> Result<()> {
+        todo!()
+    }
+}
+
 trait Database {
     fn read_db(&self) -> Result<DBState>;
     fn write_db(&self, db_state: &DBState) -> Result<()>;

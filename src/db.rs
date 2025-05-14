@@ -1,5 +1,5 @@
 use crate::models::{DBState, Epic, Status, Story};
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use std::fs;
 
 pub struct JiraDatabase {
@@ -8,19 +8,42 @@ pub struct JiraDatabase {
 
 impl JiraDatabase {
     pub fn new(file_path: String) -> Self {
-        todo!()
+        JiraDatabase {
+            database: Box::new(JSONFileDatabase { file_path }),
+        }
     }
 
     pub fn read_db(&self) -> Result<DBState> {
-        todo!()
+        self.database.read_db()
     }
 
     pub fn create_epic(&self, epic: Epic) -> Result<u32> {
-        todo!()
+        let mut db_state = self.read_db()?;
+
+        db_state.last_item_id += 1;
+        db_state.epics.insert(db_state.last_item_id, epic);
+
+        self.database.write_db(&db_state)?;
+
+        Ok(db_state.last_item_id)
     }
 
     pub fn create_story(&self, story: Story, epic_id: u32) -> Result<u32> {
-        todo!()
+        let mut db_state = self.read_db()?;
+
+        db_state.last_item_id += 1;
+        db_state.stories.insert(db_state.last_item_id, story);
+
+        db_state
+            .epics
+            .get_mut(&epic_id)
+            .ok_or_else(|| anyhow!("Can not find epic..."))?
+            .stories
+            .push(db_state.last_item_id);
+
+        self.database.write_db(&db_state)?;
+
+        Ok(db_state.last_item_id)
     }
 
     pub fn delete_epic(&self, epic_id: u32) -> Result<()> {

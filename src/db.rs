@@ -47,11 +47,52 @@ impl JiraDatabase {
     }
 
     pub fn delete_epic(&self, epic_id: u32) -> Result<()> {
-        todo!()
+        let mut db_state = self.read_db()?;
+        let epic = db_state
+            .epics
+            .get(&epic_id)
+            .ok_or_else(|| anyhow!("Epic not found..."))?;
+
+        for story_id in &epic.stories {
+            db_state.stories.remove(&story_id);
+        }
+
+        db_state.epics.remove(&epic_id);
+
+        self.database.write_db(&db_state)?;
+
+        Ok(())
     }
 
     pub fn delete_story(&self, epic_id: u32, story_id: u32) -> Result<()> {
-        todo!()
+        let mut db_state = self.read_db()?;
+
+        let epic = db_state
+            .epics
+            .get_mut(&epic_id)
+            .ok_or_else(|| anyhow!("Epic not found..."))?;
+
+        db_state.stories.remove(&story_id);
+
+        // let story_index = epic.stories.iter().position(|id| id == &story_id);
+        let mut story_index: Option<usize> = None;
+
+        for (index, story) in epic.stories.iter().enumerate() {
+            if *story == story_id {
+                story_index = Some(index);
+                break;
+            }
+        }
+
+        if let Some(index) = story_index {
+            epic.stories.remove(index);
+        } else {
+            return Err(anyhow!("Story not found in epic..."));
+        }
+
+        self.database.write_db(&db_state)?;
+
+        Ok(())
     }
 
     pub fn update_epic_status(&self, epic_id: u32, status: Status) -> Result<()> {

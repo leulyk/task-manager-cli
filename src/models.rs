@@ -1,7 +1,23 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(PartialEq, Eq, Debug, Serialize, Deserialize, Clone)]
+pub struct Epic {
+    name: String,
+    description: String,
+    status: Status,
+    stories: Vec<u32>
+}
+
+impl Epic {
+    fn new(name: &str, description: &str) -> Self {
+       Self {
+            name: name.to_owned(),
+            description: description.to_owned(),
+            status: Status::Open,
+            stories: vec![]
+        }
+    }
+}
+
 pub enum Status {
     Open,
     InProgress,
@@ -9,45 +25,24 @@ pub enum Status {
     Closed,
 }
 
-#[derive(PartialEq, Eq, Debug, Serialize, Deserialize, Clone)]
 pub struct Story {
-    pub name: String,
-    pub description: String,
-    pub status: Status,
+    name: String,
+    description: String,
+    status: Status    
 }
 
 impl Story {
-    pub fn new(name: String, description: String) -> Self {
-        Story {
-            name,
-            description,
-            status: Status::Open,
+    fn new(name: &str, description: &str) -> Self {
+        Self {
+            name: name.to_owned(),
+            description: description.to_owned(),
+            status: Status::Open
         }
     }
 }
 
-#[derive(PartialEq, Eq, Debug, Serialize, Deserialize, Clone)]
-pub struct Epic {
-    pub name: String,
-    pub description: String,
-    pub status: Status,
-    pub stories: Vec<u32>,
-}
-
-impl Epic {
-    pub fn new(name: String, description: String) -> Self {
-        Epic {
-            name,
-            description,
-            status: Status::Open,
-            stories: vec![],
-        }
-    }
-}
-
-#[derive(PartialEq, Eq, Debug, Serialize, Deserialize, Clone)]
 pub struct DBState {
-    pub last_item_id: u32,
-    pub epics: HashMap<u32, Epic>,
-    pub stories: HashMap<u32, Story>,
+    last_item_id: u32,
+    epics: HashMap<u32, Epic>,
+    stories: HashMap<u32, Story>
 }

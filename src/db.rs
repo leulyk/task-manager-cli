@@ -28,7 +28,7 @@ impl Database for JSONFileDatabase {
 }
 
 pub struct JiraDatabase {
-    database: Box<dyn Database>,
+    pub database: Box<dyn Database>,
 }
 
 impl JiraDatabase {

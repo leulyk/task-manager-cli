@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use core::fmt;
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
@@ -28,6 +29,21 @@ pub enum Status {
     Closed,
 }
 
+impl fmt::Display for Status {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Status::Open => "OPEN",
+                Status::Closed => "CLOSED",
+                Status::Resolved => "RESOLVED",
+                Status::InProgress => "IN PROGRESS"
+            }
+        )
+    }
+}
+
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Story {
     pub name: String,
@@ -50,4 +66,18 @@ pub struct DBState {
     pub last_item_id: u32,
     pub epics: HashMap<u32, Epic>,
     pub stories: HashMap<u32, Story>,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Action {
+    NavigateToEpicDetail { epic_id: u32 },
+    NavigateToStoryDetail { epic_id: u32, story_id: u32 },
+    NavigateToPreviousPage,
+    CreateEpic,
+    UpdateEpicStatus { epic_id: u32 },
+    DeleteEpic { epic_id: u32 },
+    CreateStory { epic_id: u32 },
+    UpdateStoryStatus { story_id: u32 },
+    DeleteStory { epic_id: u32, story_id: u32 },
+    Exit,
 }

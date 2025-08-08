@@ -2,7 +2,7 @@ use crate::models::{DBState, Epic, Status, Story};
 use anyhow::{anyhow, Result};
 use std::fs;
 
-trait Database {
+pub trait Database {
     fn read_db(&self) -> Result<DBState>;
     fn write_db(&self, db_state: &DBState) -> Result<()>;
 }

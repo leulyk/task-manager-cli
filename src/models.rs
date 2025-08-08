@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use core::fmt;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
@@ -38,7 +38,7 @@ impl fmt::Display for Status {
                 Status::Open => "OPEN",
                 Status::Closed => "CLOSED",
                 Status::Resolved => "RESOLVED",
-                Status::InProgress => "IN PROGRESS"
+                Status::InProgress => "IN PROGRESS",
             }
         )
     }

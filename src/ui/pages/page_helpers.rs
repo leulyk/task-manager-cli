@@ -1,7 +1,23 @@
 use ellipse::Ellipse;
+use std::cmp::Ordering;
 
 pub fn get_column_string(text: &str, width: usize) -> String {
-    todo!() // use the truncate_ellipse function from the ellipse crate
+    match text.len().cmp(&width) {
+        Ordering::Equal => String::from(text),
+        Ordering::Less => format!(
+            "{}{}",
+            text,
+            vec![' '; width - text.len()].into_iter().collect::<String>()
+        ),
+        Ordering::Greater => {
+            if width <= 3 {
+                vec!['.'; width].into_iter().collect::<String>()
+            } else {
+                text.truncate_ellipse(width - 3).to_string()
+                // format!( "{}...", &text[0..text.len() - width - 3])
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -41,5 +57,5 @@ mod tests {
         assert_eq!(get_column_string(text2, width), "test  ".to_owned());
         assert_eq!(get_column_string(text3, width), "testme".to_owned());
         assert_eq!(get_column_string(text4, width), "tes...".to_owned());
-    } 
+    }
 }

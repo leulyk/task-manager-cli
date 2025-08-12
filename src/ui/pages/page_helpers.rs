@@ -7,14 +7,15 @@ pub fn get_column_string(text: &str, width: usize) -> String {
         Ordering::Less => format!(
             "{}{}",
             text,
-            vec![' '; width - text.len()].into_iter().collect::<String>()
+            vec![' '; width - text.len()]
+                .into_iter()
+                .collect::<String>()
         ),
         Ordering::Greater => {
             if width <= 3 {
                 vec!['.'; width].into_iter().collect::<String>()
             } else {
                 text.truncate_ellipse(width - 3).to_string()
-                // format!( "{}...", &text[0..text.len() - width - 3])
             }
         }
     }
